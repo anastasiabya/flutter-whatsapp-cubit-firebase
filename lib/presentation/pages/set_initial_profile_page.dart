@@ -1,13 +1,20 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:whatsapp/presentation/bloc/phone_auth/phone_auth_cubit.dart';
 import 'package:whatsapp/presentation/widgets/theme/style.dart';
 
 class SetInitialProfilePage extends StatefulWidget {
+  final String? phoneNumber;
+
+  const SetInitialProfilePage({Key? key, this.phoneNumber}) : super(key: key);
+
   @override
   _SetInitialProfilePageState createState() => _SetInitialProfilePageState();
 }
 
 class _SetInitialProfilePageState extends State<SetInitialProfilePage> {
+  String? get _phoneNumber => widget.phoneNumber;
   TextEditingController _nameController = TextEditingController();
 
   @override
@@ -51,7 +58,9 @@ class _SetInitialProfilePageState extends State<SetInitialProfilePage> {
                 alignment: Alignment.bottomCenter,
                 child: MaterialButton(
                   color: lightPrimaryColor,
-                  onPressed: () {},
+                  onPressed: () {
+                    _submitProfileInfo();
+                  },
                   child: Text(
                     "Next",
                     style: TextStyle(
@@ -108,5 +117,14 @@ class _SetInitialProfilePageState extends State<SetInitialProfilePage> {
         ],
       ),
     );
+  }
+
+  void _submitProfileInfo() {
+    if (_nameController.text.isNotEmpty) {
+      BlocProvider.of<PhoneAuthCubit>(context).submitProfileInfo(
+          profileUrl: "",
+          phoneNumber: _phoneNumber!,
+          name: _nameController.text);
+    }
   }
 }

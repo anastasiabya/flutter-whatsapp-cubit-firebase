@@ -1,15 +1,21 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
-import 'package:whatsapp/presentation/pages/set_initial_profile_page.dart';
+import 'package:whatsapp/presentation/bloc/phone_auth/phone_auth_cubit.dart';
 import 'package:whatsapp/presentation/widgets/theme/style.dart';
 
 class PhoneVerificationPage extends StatefulWidget {
+  final String? phoneNumber;
+
+  const PhoneVerificationPage({Key? key, this.phoneNumber}) : super(key: key);
+
   @override
   _PhoneVerificationPageState createState() => _PhoneVerificationPageState();
 }
 
 class _PhoneVerificationPageState extends State<PhoneVerificationPage> {
+  String? get _phoneNumber => widget.phoneNumber;
   TextEditingController _pinCodeController = TextEditingController();
 
   @override
@@ -52,10 +58,7 @@ class _PhoneVerificationPageState extends State<PhoneVerificationPage> {
                 child: MaterialButton(
                   color: lightPrimaryColor,
                   onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (_) => SetInitialProfilePage()));
+                    _submitSmsCode();
                   },
                   child: Text(
                     "Next",
@@ -75,7 +78,7 @@ class _PhoneVerificationPageState extends State<PhoneVerificationPage> {
 
   Widget _pinCodeWidget() {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 50),
+      margin: EdgeInsets.symmetric(horizontal: 20),
       child: Column(
         children: <Widget>[
           PinCodeTextField(
@@ -96,5 +99,12 @@ class _PhoneVerificationPageState extends State<PhoneVerificationPage> {
         ],
       ),
     );
+  }
+
+  void _submitSmsCode(){
+    if (_pinCodeController.text.isNotEmpty){
+      BlocProvider.of<PhoneAuthCubit>(context)
+          .submitSmsCode(smsCode: _pinCodeController.text);
+    }
   }
 }

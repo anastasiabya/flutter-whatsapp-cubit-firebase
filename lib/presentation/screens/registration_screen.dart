@@ -1,7 +1,12 @@
 import 'package:country_pickers/country.dart';
 import 'package:country_pickers/country_pickers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:whatsapp/presentation/bloc/auth/auth_cubit.dart';
+import 'package:whatsapp/presentation/bloc/phone_auth/phone_auth_cubit.dart';
 import 'package:whatsapp/presentation/pages/phone_verification_page.dart';
+import 'package:whatsapp/presentation/pages/set_initial_profile_page.dart';
+import 'package:whatsapp/presentation/screens/home_screen.dart';
 import 'package:whatsapp/presentation/widgets/theme/style.dart';
 
 class RegistrationScreen extends StatefulWidget {
@@ -10,15 +15,71 @@ class RegistrationScreen extends StatefulWidget {
 }
 
 class _RegistrationScreenState extends State<RegistrationScreen> {
-  Country _selectedFilteredDialogCountry =
+  static Country _selectedFilteredDialogCountry =
       CountryPickerUtils.getCountryByPhoneCode("7");
-  String _countryCode = "";
+  String _countryCode = _selectedFilteredDialogCountry.phoneCode;
   String _phoneNumber = "";
 
   TextEditingController _phoneAuthController = TextEditingController();
 
   @override
+  void dispose() {
+    _phoneAuthController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    return Scaffold(
+      body: BlocConsumer<PhoneAuthCubit, PhoneAuthState>(
+          builder: (context, phoneAuthState) {
+        if (phoneAuthState is PhoneAuthSmsCodeReceived) {
+          return PhoneVerificationPage(
+            phoneNumber: _phoneNumber,
+          );
+        }
+        if (phoneAuthState is PhoneAuthProfileInfo) {
+          return SetInitialProfilePage(
+            phoneNumber: _phoneNumber,
+          );
+        }
+        if (phoneAuthState is PhoneAuthLoading) {
+          return Scaffold(
+            body: Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
+        }
+        if (phoneAuthState is PhoneAuthSuccess) {
+          return BlocBuilder<AuthCubit, AuthState>(builder: (context, authState) {
+            if (authState is Authenticated) {
+              return HomeScreen(uid: authState.uid);
+            }
+            return Container();
+          });
+        }
+        return _bodyWidget();
+      }, listener: (context, phoneAuthState) {
+        if (phoneAuthState is PhoneAuthSuccess) {
+          BlocProvider.of<AuthCubit>(context).loggedIn();
+        }
+        if (phoneAuthState is PhoneAuthFailure) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            backgroundColor: Colors.red,
+            content: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [Text("Something is wrong"), Icon(Icons.error_outline)],
+              ),
+            ),
+          ));
+        }
+      }),
+    );
+  }
+
+  Widget _bodyWidget() {
     return Scaffold(
         resizeToAvoidBottomInset: false,
         body: Container(
@@ -94,10 +155,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   child: MaterialButton(
                     color: lightPrimaryColor,
                     onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (_) => PhoneVerificationPage()));
+                      _submitVerifyPhoneNumber();
                     },
                     child: Text(
                       "Next",
@@ -168,5 +226,12 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     );
   }
 
-  void _submitVerifyPhoneNumber() {}
+  void _submitVerifyPhoneNumber() {
+    if (_phoneAuthController.text.isNotEmpty) {
+      _phoneNumber = "+$_countryCode${_phoneAuthController.text}";
+      BlocProvider.of<PhoneAuthCubit>(context).submitVerifyPhoneNumber(
+        phoneNumber: _phoneNumber,
+      );
+    }
+  }
 }
