@@ -1,3 +1,5 @@
+import 'package:whatsapp/domain/entities/my_chat_entity.dart';
+import 'package:whatsapp/domain/entities/text_message_entity.dart';
 import 'package:whatsapp/domain/entities/user_entity.dart';
 
 abstract class FirebaseRemoteDataSource{
@@ -8,8 +10,12 @@ abstract class FirebaseRemoteDataSource{
   Future<String> getCurrentUID();
   Future<void> getCreateCurrentUser(UserEntity user);
 
-  Stream<List<UserEntity>> getAllUsers();
+  Stream<Set<UserEntity>> getAllUsers();
+  Stream<List<TextMessageEntity>> getMessages(String channelId);
+  Stream<List<MyChatEntity>> getMyChat(String uid);
 
   Future<void> createOneToOneChatChannel(String uid,String otherUid);
   Future<String> getOneToOneSingleUserChannelId(String uid,String otherUid);
+  Future<void> addToMyChat(MyChatEntity myChatEntity);
+  Future<void> sendTextMessage(TextMessageEntity textMessageEntity,String channelId,);
 }

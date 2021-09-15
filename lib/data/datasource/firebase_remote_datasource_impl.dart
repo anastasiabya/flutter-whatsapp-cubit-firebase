@@ -1,3 +1,9 @@
+import 'package:whatsapp/data/model/my_chat_model.dart';
+import 'package:whatsapp/data/model/text_message_model.dart';
+import 'package:whatsapp/domain/entities/my_chat_entity.dart';
+
+import 'package:whatsapp/domain/entities/text_message_entity.dart';
+
 import 'firebase_remote_datasource.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -123,12 +129,12 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
   }
 
   @override
-  Stream<List<UserEntity>> getAllUsers() {
+  Stream<Set<UserEntity>> getAllUsers() {
     final userCollectionRef = fireStore.collection("users");
     return userCollectionRef.snapshots().map((querySnapshot) {
       return querySnapshot.docs
           .map((docQuerySnapshot) => UserModel.fromSnapshot(docQuerySnapshot))
-          .toList();
+          .toSet();
     });
   }
 
@@ -146,5 +152,113 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
       }
       return Future.value(null);
     });
+  }
+
+  @override
+  Future<void> addToMyChat(MyChatEntity myChatEntity) async {
+    final myChatRef = fireStore
+        .collection('users')
+        .doc(myChatEntity.senderUID)
+        .collection('myChat');
+
+    final otherChatRef = fireStore
+        .collection('users')
+        .doc(myChatEntity.recipientUID)
+        .collection('myChat');
+
+    final myNewChat = MyChatModel(
+      time: myChatEntity.time,
+      senderName: myChatEntity.senderName,
+      senderUID: myChatEntity.senderPhoneNumber,
+      recipientUID: myChatEntity.recipientUID,
+      recipientName: myChatEntity.recipientName,
+      channelId: myChatEntity.channelId,
+      isArchived: myChatEntity.isArchived,
+      isRead: myChatEntity.isRead,
+      profileURL: myChatEntity.profileURL,
+      recentTextMessage: myChatEntity.recentTextMessage,
+      recipientPhoneNumber: myChatEntity.recipientPhoneNumber,
+      senderPhoneNumber: myChatEntity.senderPhoneNumber,
+    ).toDocument();
+    final otherNewChat = MyChatModel(
+      time: myChatEntity.time,
+      senderName: myChatEntity.recipientName,
+      senderUID: myChatEntity.recipientUID,
+      recipientUID: myChatEntity.senderUID,
+      recipientName: myChatEntity.senderName,
+      channelId: myChatEntity.channelId,
+      isArchived: myChatEntity.isArchived,
+      isRead: myChatEntity.isRead,
+      profileURL: myChatEntity.profileURL,
+      recentTextMessage: myChatEntity.recentTextMessage,
+      recipientPhoneNumber: myChatEntity.senderPhoneNumber,
+      senderPhoneNumber: myChatEntity.recipientPhoneNumber,
+    ).toDocument();
+
+    myChatRef.doc(myChatEntity.recipientUID).get().then((myChatDoc) {
+      if (!myChatDoc.exists) {
+        //Create
+        myChatRef.doc(myChatEntity.recipientUID).set(myNewChat);
+        otherChatRef.doc(myChatEntity.senderUID).set(otherNewChat);
+        return;
+      } else {
+        //Update
+        myChatRef.doc(myChatEntity.recipientUID).update(myNewChat);
+        otherChatRef.doc(myChatEntity.senderUID).update(otherNewChat);
+        return;
+      }
+    });
+  }
+
+  @override
+  Stream<List<TextMessageEntity>> getMessages(String channelId) {
+    final messagesRef = fireStore
+        .collection("myChatChannel")
+        .doc(channelId)
+        .collection('messages');
+
+    return messagesRef.orderBy('time').snapshots().map(
+          (querySnap) => querySnap.docs
+              .map((doc) => TextMessageModel.fromSnapShot(doc))
+              .toList(),
+        );
+  }
+
+  @override
+  Stream<List<MyChatEntity>> getMyChat(String uid) {
+    final myChatRef =
+        fireStore.collection('users').doc(uid).collection('myChat');
+
+    return myChatRef.orderBy('time', descending: true).snapshots().map(
+          (querySnap) => querySnap.docs
+              .map((doc) => MyChatModel.fromSnapShot(doc))
+              .toList(),
+        );
+  }
+
+  @override
+  Future<void> sendTextMessage(
+    TextMessageEntity textMessageEntity,
+    String channelId,
+  ) async {
+    final messageRef = fireStore
+        .collection('myChatChannel')
+        .doc(channelId)
+        .collection('messages');
+
+    final messageId = messageRef.doc().id;
+
+    final newMessage = TextMessageModel(
+      message: textMessageEntity.message,
+      messageId: messageId,
+      messageType: textMessageEntity.messsageType,
+      recipientName: textMessageEntity.recipientName,
+      recipientUID: textMessageEntity.recipientUID,
+      sederUID: textMessageEntity.sederUID,
+      senderName: textMessageEntity.senderName,
+      time: textMessageEntity.time,
+    ).toDocument();
+
+    messageRef.doc(messageId).set(newMessage);
   }
 }

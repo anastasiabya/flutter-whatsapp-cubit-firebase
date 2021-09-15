@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:whatsapp/domain/entities/user_entity.dart';
+import 'package:whatsapp/presentation/pages/sub_pages/select_contact_page.dart';
 import 'package:whatsapp/presentation/pages/sub_pages/single_item_chat_user_page.dart';
 import 'package:whatsapp/presentation/widgets/theme/style.dart';
 
 class ChatPage extends StatelessWidget {
+  final UserEntity? userInfo;
+
+  const ChatPage({Key? key, this.userInfo}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -11,7 +17,11 @@ class ChatPage extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: lightPrimaryColor,
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(context, MaterialPageRoute(builder: (_) => SelectContactPage(
+            userInfo: userInfo,
+          )));
+        },
         child: Icon(Icons.chat),
       ),
     );
@@ -38,7 +48,7 @@ class ChatPage extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.all(15),
             child: Text(
-              "Start chat with your friends and family,\n on WhatsApp Clone",
+              "Start chat with your friends and family,\n on WhatsApp",
               textAlign: TextAlign.center,
               style:
                   TextStyle(fontSize: 14, color: Colors.black.withOpacity(.4)),

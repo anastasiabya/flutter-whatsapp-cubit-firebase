@@ -2,8 +2,10 @@ import 'package:country_pickers/country.dart';
 import 'package:country_pickers/country_pickers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:whatsapp/data/model/user_model.dart';
 import 'package:whatsapp/presentation/bloc/auth/auth_cubit.dart';
 import 'package:whatsapp/presentation/bloc/phone_auth/phone_auth_cubit.dart';
+import 'package:whatsapp/presentation/bloc/user/user_cubit.dart';
 import 'package:whatsapp/presentation/pages/phone_verification_page.dart';
 import 'package:whatsapp/presentation/pages/set_initial_profile_page.dart';
 import 'package:whatsapp/presentation/screens/home_screen.dart';
@@ -51,9 +53,21 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           );
         }
         if (phoneAuthState is PhoneAuthSuccess) {
-          return BlocBuilder<AuthCubit, AuthState>(builder: (context, authState) {
+          return BlocBuilder<AuthCubit, AuthState>(
+              builder: (context, authState) {
             if (authState is Authenticated) {
-              return HomeScreen(uid: authState.uid);
+              return BlocBuilder<UserCubit, UserState>(
+                  builder: (context, userState) {
+                if (userState is UserLoaded) {
+                  final currentUserInfo = userState.users.firstWhere(
+                      (user) => user.uid == authState.uid,
+                      orElse: () => UserModel());
+                  return HomeScreen(
+                    userInfo: currentUserInfo,
+                  );
+                }
+                return Container();
+              });
             }
             return Container();
           });
@@ -70,7 +84,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 15),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [Text("Something is wrong"), Icon(Icons.error_outline)],
+                children: [
+                  Text("Something is wrong"),
+                  Icon(Icons.error_outline)
+                ],
               ),
             ),
           ));
