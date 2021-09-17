@@ -21,7 +21,7 @@ class CallsPage extends StatelessWidget {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: lightPrimaryColor,
+        backgroundColor: primaryColor,
         onPressed: () {},
         child: Icon(Icons.add_call),
       ),

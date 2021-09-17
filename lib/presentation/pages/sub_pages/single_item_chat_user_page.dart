@@ -1,6 +1,14 @@
 import 'package:flutter/material.dart';
 
 class SingleItemChatUserPage extends StatelessWidget {
+  final String? time;
+  final String? recentSendMessage;
+  final String? name;
+
+  const SingleItemChatUserPage(
+      {Key? key, this.time, this.recentSendMessage, this.name})
+      : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -10,9 +18,9 @@ class SingleItemChatUserPage extends StatelessWidget {
           borderRadius: BorderRadius.all(Radius.circular(25)),
           child: Image.asset("assets/profile_default.png"),
         ),
-        title: Text("User"),
-        subtitle: Text("This is a message"),
-        trailing: Text("12:20"),
+        title: Text("$name"),
+        subtitle: Text("$recentSendMessage"),
+        trailing: Text("$time"),
       ),
     );
   }

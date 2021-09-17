@@ -43,7 +43,7 @@ class _SplashScreenState extends State<SplashScreen> {
               child: Text(
                 "FACEBOOK",
                 style: TextStyle(
-                    color: lightPrimaryColor,
+                    color: primaryColor,
                     fontWeight: FontWeight.bold,
                     letterSpacing: 2),
               )),

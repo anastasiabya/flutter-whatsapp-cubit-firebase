@@ -1,26 +1,49 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:whatsapp/domain/entities/user_entity.dart';
+import 'package:whatsapp/presentation/bloc/my_chat/my_chat_cubit.dart';
 import 'package:whatsapp/presentation/pages/sub_pages/select_contact_page.dart';
+import 'package:whatsapp/presentation/pages/sub_pages/single_communication_page.dart';
 import 'package:whatsapp/presentation/pages/sub_pages/single_item_chat_user_page.dart';
 import 'package:whatsapp/presentation/widgets/theme/style.dart';
 
-class ChatPage extends StatelessWidget {
+class ChatPage extends StatefulWidget {
   final UserEntity? userInfo;
 
   const ChatPage({Key? key, this.userInfo}) : super(key: key);
 
   @override
+  _ChatPageState createState() => _ChatPageState();
+}
+
+class _ChatPageState extends State<ChatPage> {
+  @override
+  void initState() {
+    BlocProvider.of<MyChatCubit>(context).getMyChat(uid: widget.userInfo!.uid);
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: _emptyListDisplayMessageWidget(),
+      body: BlocBuilder<MyChatCubit, MyChatState>(
+        builder: (_, myChatState) {
+          if (myChatState is MyChatLoaded) {
+            return _myChatList(myChatState);
+          }
+          return _loadingWidget();
+        },
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: lightPrimaryColor,
+        backgroundColor: primaryColor,
         onPressed: () {
-          Navigator.push(context, MaterialPageRoute(builder: (_) => SelectContactPage(
-            userInfo: userInfo,
-          )));
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (_) => SelectContactPage(
+                        userInfo: widget.userInfo,
+                      )));
         },
         child: Icon(Icons.chat),
       ),
@@ -35,7 +58,7 @@ class ChatPage extends StatelessWidget {
           height: 150,
           width: 150,
           decoration: BoxDecoration(
-            color: lightPrimaryColor.withOpacity(.5),
+            color: primaryColor.withOpacity(.5),
             borderRadius: BorderRadius.all(Radius.circular(100)),
           ),
           child: Icon(
@@ -59,21 +82,48 @@ class ChatPage extends StatelessWidget {
     );
   }
 
-  Widget _myChatList() {
-    return Expanded(
-        child: ListView.separated(
-      itemCount: 10,
-      itemBuilder: (_, index) {
-        return SingleItemChatUserPage();
-      },
-      separatorBuilder: (context, index) {
-        return Padding(
-          padding: const EdgeInsets.only(left: 80, right: 10),
-          child: Divider(
-            height: 1,
-          ),
-        );
-      },
-    ));
+  Widget _myChatList(MyChatLoaded myChatData) {
+    return myChatData.myChat!.isEmpty
+        ? _emptyListDisplayMessageWidget()
+        : ListView.separated(
+            itemCount: myChatData.myChat!.length,
+            itemBuilder: (_, index) {
+              final myChat = myChatData.myChat![index];
+              return InkWell(
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(
+                      builder: (_) => SingleCommunicationPage(
+                        senderPhoneNumber: myChat.senderPhoneNumber,
+                        senderUID: widget.userInfo!.uid,
+                        senderName: myChat.senderName,
+                        recipientUID: myChat.recipientUID,
+                        recipientPhoneNumber: myChat.recipientPhoneNumber,
+                        recipientName: myChat.recipientName,
+                      ) ));
+                },
+                child: SingleItemChatUserPage(
+                  name: myChat.recipientName,
+                  time: DateFormat('hh:mm a').format(myChat.time!.toDate()),
+                  recentSendMessage: myChat.recentTextMessage,
+                ),
+              );
+            },
+            separatorBuilder: (context, index) {
+              return Padding(
+                padding: const EdgeInsets.only(left: 80, right: 10),
+                child: Divider(
+                  height: 1,
+                ),
+              );
+            },
+          );
+  }
+
+  Widget _loadingWidget() {
+    return Center(
+      child: CircularProgressIndicator(
+        color: primaryColor,
+      ),
+    );
   }
 }

@@ -35,7 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
           elevation: 0,
           automaticallyImplyLeading: false,
           backgroundColor:
-              _isSearch == false ? lightPrimaryColor : Colors.transparent,
+              _isSearch == false ? primaryColor : Colors.transparent,
           title: _isSearch == false
               ? Text(
                   "WhatsApp",
@@ -118,7 +118,7 @@ class _HomeScreenState extends State<HomeScreen> {
         decoration: InputDecoration(
           hintText: "Search...",
           focusedBorder: UnderlineInputBorder(
-            borderSide: BorderSide(color: lightPrimaryColor, width: 2.0),
+            borderSide: BorderSide(color: primaryColor, width: 2.0),
           ),
           prefixIcon: InkWell(
             onTap: () {

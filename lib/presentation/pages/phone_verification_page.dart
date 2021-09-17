@@ -32,7 +32,7 @@ class _PhoneVerificationPageState extends State<PhoneVerificationPage> {
                 Text(
                   "Verify your phone number",
                   style: TextStyle(
-                      color: lightPrimaryColor,
+                      color: primaryColor,
                       fontSize: 16,
                       fontWeight: FontWeight.bold),
                 ),
@@ -56,7 +56,7 @@ class _PhoneVerificationPageState extends State<PhoneVerificationPage> {
               child: Align(
                 alignment: Alignment.bottomCenter,
                 child: MaterialButton(
-                  color: lightPrimaryColor,
+                  color: primaryColor,
                   onPressed: () {
                     _submitSmsCode();
                   },
@@ -83,7 +83,7 @@ class _PhoneVerificationPageState extends State<PhoneVerificationPage> {
         children: <Widget>[
           PinCodeTextField(
             pinTheme: PinTheme(
-              selectedColor: lightPrimaryColor,
+              selectedColor: primaryColor,
             ),
             controller: _pinCodeController,
             length: 6,

@@ -14,7 +14,9 @@ import 'package:whatsapp/domain/usecases/sign_in_with_phone_number_usecase.dart'
 import 'package:whatsapp/domain/usecases/sign_out_usecase.dart';
 import 'package:whatsapp/domain/usecases/verify_phone_number_usecase.dart';
 import 'package:whatsapp/presentation/bloc/auth/auth_cubit.dart';
+import 'package:whatsapp/presentation/bloc/communication/communication_cubit.dart';
 import 'package:whatsapp/presentation/bloc/get_device_number/get_device_numbers_cubit.dart';
+import 'package:whatsapp/presentation/bloc/my_chat/my_chat_cubit.dart';
 import 'package:whatsapp/presentation/bloc/phone_auth/phone_auth_cubit.dart';
 import 'package:whatsapp/presentation/bloc/user/user_cubit.dart';
 
@@ -47,6 +49,15 @@ Future<void> init() async {
   sl.registerFactory<UserCubit>(() => UserCubit(
         createOneToOneChatChannelUseCase: sl.call(),
         getAllUserUseCase: sl.call(),
+      ));
+  sl.registerFactory<CommunicationCubit>(() => CommunicationCubit(
+        addToMyChatUseCase: sl.call(),
+        getOneToOneSingleUserChatChannelUseCase: sl.call(),
+        getTextMessagesUseCase: sl.call(),
+        sendTextMessageUseCase: sl.call(),
+      ));
+  sl.registerFactory<MyChatCubit>(() => MyChatCubit(
+        getMyChatUseCase: sl.call(),
       ));
 
   //useCase

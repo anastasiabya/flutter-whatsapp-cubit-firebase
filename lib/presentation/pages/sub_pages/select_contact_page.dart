@@ -6,6 +6,7 @@ import 'package:whatsapp/domain/entities/contact_entity.dart';
 import 'package:whatsapp/domain/entities/user_entity.dart';
 import 'package:whatsapp/presentation/bloc/get_device_number/get_device_numbers_cubit.dart';
 import 'package:whatsapp/presentation/bloc/user/user_cubit.dart';
+import 'package:whatsapp/presentation/pages/sub_pages/single_communication_page.dart';
 import 'package:whatsapp/presentation/widgets/theme/style.dart';
 
 class SelectContactPage extends StatefulWidget {
@@ -122,7 +123,7 @@ class _SelectContactPageState extends State<SelectContactPage> {
             height: 45,
             width: 45,
             decoration: BoxDecoration(
-                color: lightPrimaryColor,
+                color: primaryColor,
                 borderRadius: BorderRadius.all(Radius.circular(40))),
             child: Icon(
               Icons.people,
@@ -155,7 +156,7 @@ class _SelectContactPageState extends State<SelectContactPage> {
                 height: 45,
                 width: 45,
                 decoration: BoxDecoration(
-                    color: lightPrimaryColor,
+                    color: primaryColor,
                     borderRadius: BorderRadius.all(Radius.circular(40))),
                 child: Icon(
                   Icons.person_add,
@@ -176,7 +177,7 @@ class _SelectContactPageState extends State<SelectContactPage> {
           ),
           Icon(
             FontAwesomeIcons.qrcode,
-            color: lightPrimaryColor,
+            color: primaryColor,
           )
         ],
       ),
@@ -199,7 +200,21 @@ class _SelectContactPageState extends State<SelectContactPage> {
         },
         itemBuilder: (ctx, index) {
           return InkWell(
-            onTap: () {},
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (_) => SingleCommunicationPage(
+                            recipientName: contacts[index].label,
+                            recipientPhoneNumber: contacts[index].phoneNumber,
+                            recipientUID: contacts[index].uid,
+                            senderName: widget.userInfo!.name,
+                            senderPhoneNumber: widget.userInfo!.phoneNumber,
+                            senderUID: widget.userInfo!.uid,
+                          )));
+              BlocProvider.of<UserCubit>(context).createChatChannel(
+                  uid: widget.userInfo!.uid, otherUid: contacts[index].uid);
+            },
             child: Container(
               margin: EdgeInsets.only(right: 10, left: 2),
               child: ListTile(

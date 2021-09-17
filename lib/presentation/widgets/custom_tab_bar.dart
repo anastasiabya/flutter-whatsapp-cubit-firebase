@@ -10,7 +10,7 @@ class CustomTabBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 50,
-      decoration: BoxDecoration(color: lightPrimaryColor),
+      decoration: BoxDecoration(color: primaryColor),
       child: Row(
         children: <Widget>[
           Container(

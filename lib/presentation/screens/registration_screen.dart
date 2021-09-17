@@ -109,7 +109,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   Text(
                     "Verify your phone number",
                     style: TextStyle(
-                        color: lightPrimaryColor,
+                        color: primaryColor,
                         fontSize: 16,
                         fontWeight: FontWeight.bold),
                   ),
@@ -139,7 +139,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         border: Border(
                             bottom: BorderSide(
                       width: 1.50,
-                      color: lightPrimaryColor,
+                      color: primaryColor,
                     ))),
                     width: 80,
                     height: 42,
@@ -158,7 +158,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                           hintText: "Phone Number",
                           focusedBorder: UnderlineInputBorder(
                             borderSide: BorderSide(
-                                color: lightPrimaryColor, width: 2.0),
+                                color: primaryColor, width: 2.0),
                           ),
                         ),
                       ),
@@ -170,7 +170,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 child: Align(
                   alignment: Alignment.bottomCenter,
                   child: MaterialButton(
-                    color: lightPrimaryColor,
+                    color: primaryColor,
                     onPressed: () {
                       _submitVerifyPhoneNumber();
                     },
@@ -194,7 +194,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         context: context,
         builder: (_) => Theme(
               data: Theme.of(context).copyWith(
-                primaryColor: lightPrimaryColor,
+                primaryColor: primaryColor,
               ),
               child: CountryPickerDialog(
                 titlePadding: EdgeInsets.all(8.0),
@@ -203,7 +203,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   hintText: "Search",
                   focusedBorder: UnderlineInputBorder(
                     borderSide:
-                        BorderSide(color: lightPrimaryColor, width: 2.0),
+                        BorderSide(color: primaryColor, width: 2.0),
                   ),
                 ),
                 isSearchable: true,

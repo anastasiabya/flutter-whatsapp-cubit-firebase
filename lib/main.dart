@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:whatsapp/presentation/bloc/auth/auth_cubit.dart';
+import 'package:whatsapp/presentation/bloc/communication/communication_cubit.dart';
 import 'package:whatsapp/presentation/bloc/get_device_number/get_device_numbers_cubit.dart';
+import 'package:whatsapp/presentation/bloc/my_chat/my_chat_cubit.dart';
 import 'package:whatsapp/presentation/bloc/phone_auth/phone_auth_cubit.dart';
 import 'package:whatsapp/presentation/bloc/user/user_cubit.dart';
 import 'package:whatsapp/presentation/screens/home_screen.dart';
@@ -35,11 +37,17 @@ class MyApp extends StatelessWidget {
         BlocProvider<UserCubit>(
           create: (_) => di.sl<UserCubit>()..getAllUsers(),
         ),
+        BlocProvider<CommunicationCubit>(
+          create: (_) => di.sl<CommunicationCubit>(),
+        ),
+        BlocProvider<MyChatCubit>(
+          create: (_) => di.sl<MyChatCubit>(),
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Flutter WhatsApp Clone',
-        theme: ThemeData(primaryColor: lightPrimaryColor),
+        theme: ThemeData(primaryColor: primaryColor),
         routes: {
           "/": (context) {
             return BlocBuilder<AuthCubit, AuthState>(

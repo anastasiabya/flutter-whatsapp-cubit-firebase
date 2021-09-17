@@ -20,7 +20,7 @@ class WelcomeScreen extends StatelessWidget {
               "Welcome to WhatsApp",
               style: TextStyle(
                 fontSize: 20,
-                color: lightPrimaryColor,
+                color: primaryColor,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -40,7 +40,7 @@ class WelcomeScreen extends StatelessWidget {
                   height: 30,
                 ),
                 MaterialButton(
-                  color: lightPrimaryColor,
+                  color: primaryColor,
                   onPressed: () {
                     Navigator.push(
                       context,

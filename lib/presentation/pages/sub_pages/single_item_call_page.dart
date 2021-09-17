@@ -14,11 +14,11 @@ class SingleItemCallPage extends StatelessWidget {
         title: Text("User Name"),
         subtitle: Row(
           children: <Widget>[
-            Icon(Icons.call_received, color: lightPrimaryColor,),
+            Icon(Icons.call_received, color: primaryColor,),
             Text("Yesterday"),
           ],
         ),
-        trailing: Icon(Icons.call, color: lightPrimaryColor,),
+        trailing: Icon(Icons.call, color: primaryColor,),
       ),
     );
   }

@@ -34,7 +34,7 @@ class _SetInitialProfilePageState extends State<SetInitialProfilePage> {
             Text(
               "Profile Info",
               style: TextStyle(
-                color: lightPrimaryColor,
+                color: primaryColor,
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),
@@ -57,7 +57,7 @@ class _SetInitialProfilePageState extends State<SetInitialProfilePage> {
               child: Align(
                 alignment: Alignment.bottomCenter,
                 child: MaterialButton(
-                  color: lightPrimaryColor,
+                  color: primaryColor,
                   onPressed: () {
                     _submitProfileInfo();
                   },
@@ -98,7 +98,7 @@ class _SetInitialProfilePageState extends State<SetInitialProfilePage> {
               decoration: InputDecoration(
                 hintText: "Enter your name",
                 focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: lightPrimaryColor, width: 2.0),
+                  borderSide: BorderSide(color: primaryColor, width: 2.0),
                 ),
               ),
             ),

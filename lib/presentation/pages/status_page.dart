@@ -57,7 +57,7 @@ class StatusPage extends StatelessWidget {
             height: 55,
             width: 55,
             decoration: BoxDecoration(
-              color: lightPrimaryColor,
+              color: primaryColor,
               borderRadius: BorderRadius.all(Radius.circular(50)),
               boxShadow: [
                 BoxShadow(
@@ -98,7 +98,7 @@ class StatusPage extends StatelessWidget {
                     width: 20,
                     height: 20,
                     decoration: BoxDecoration(
-                        color: lightPrimaryColor,
+                        color: primaryColor,
                         borderRadius: BorderRadius.all(Radius.circular(20))),
                     child: Icon(
                       Icons.add,
