@@ -4,6 +4,7 @@ import 'package:bubble/bubble.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:pagination_view/pagination_view.dart';
 import 'package:whatsapp/presentation/bloc/communication/communication_cubit.dart';
 import 'package:whatsapp/presentation/widgets/theme/style.dart';
 

@@ -26,21 +26,22 @@ class LocalDataSourceImpl implements LocalDataSource {
       });
     } else {
       showDialog(
-          context: context,
-          builder: (BuildContext context) => AlertDialog(
-                title: Text("Contacts Permission"),
-                content: Text("This app needs contacts access"),
-                actions: <Widget>[
-                  CupertinoDialogAction(
-                    child: Text("Deny"),
-                    onPressed: () => Navigator.pop(context),
-                  ),
-                  CupertinoDialogAction(
-                    child: Text("Settings"),
-                    onPressed: () => openAppSettings(),
-                  ),
-                ],
-              ));
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+          title: Text("Contacts Permission"),
+          content: Text("This app needs contacts access"),
+          actions: <Widget>[
+            CupertinoDialogAction(
+              child: Text("Deny"),
+              onPressed: () => Navigator.pop(context),
+            ),
+            CupertinoDialogAction(
+              child: Text("Settings"),
+              onPressed: () => openAppSettings(),
+            ),
+          ],
+        ),
+      );
     }
     return contacts;
   }

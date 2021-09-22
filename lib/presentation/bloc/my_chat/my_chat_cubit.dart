@@ -17,10 +17,6 @@ class MyChatCubit extends Cubit<MyChatState> {
       final myChatStreamData = getMyChatUseCase!.call(uid!);
       myChatStreamData.listen((myChatData) {
 
-        for (var n in myChatData) {
-          print(n.recentTextMessage);
-        }
-
         emit(MyChatLoaded(myChat: myChatData));
       });
     } on SocketException catch (_) {} catch (_) {}

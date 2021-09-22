@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:whatsapp/domain/entities/user_entity.dart';
 import 'package:whatsapp/presentation/pages/calls_page.dart';
@@ -23,7 +24,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   List<Widget> get _pages => [
         CameraPage(),
-        ChatPage(userInfo: widget.userInfo,),
+        ChatPage(
+          userInfo: widget.userInfo,
+        ),
         StatusPage(),
         CallsPage(),
       ];
@@ -31,46 +34,48 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: _currentPageIndex != 0 ? AppBar(
-          elevation: 0,
-          automaticallyImplyLeading: false,
-          backgroundColor:
-              _isSearch == false ? primaryColor : Colors.transparent,
-          title: _isSearch == false
-              ? Text(
-                  "WhatsApp",
-                  style: TextStyle(color: Colors.white),
-                )
-              : Container(
-                  height: 0.0,
-                  width: 0.0,
-                ),
-          flexibleSpace: _isSearch == false
-              ? Container(
-                  height: 0.0,
-                  width: 0.0,
-                )
-              : _buildSearch(),
-          actions: <Widget>[
-            InkWell(
-              onTap: () {
-                setState(() {
-                  _isSearch = true;
-                });
-              },
-              child: _isSearch == false
-                  ? Icon(Icons.search, color: Colors.white)
-                  : SizedBox.shrink(),
-            ),
-            SizedBox(
-              width: 8,
-            ),
-            Icon(
-              Icons.more_vert,
-              color: Colors.white,
-            ),
-          ],
-        ) : null,
+        appBar: _currentPageIndex != 0
+            ? AppBar(
+                elevation: 0,
+                automaticallyImplyLeading: false,
+                backgroundColor:
+                    _isSearch == false ? primaryColor : Colors.transparent,
+                title: _isSearch == false
+                    ? Text(
+                        "WhatsApp",
+                        style: TextStyle(color: Colors.white),
+                      )
+                    : Container(
+                        height: 0.0,
+                        width: 0.0,
+                      ),
+                flexibleSpace: _isSearch == false
+                    ? Container(
+                        height: 0.0,
+                        width: 0.0,
+                      )
+                    : _buildSearch(),
+                actions: <Widget>[
+                  InkWell(
+                    onTap: () {
+                      setState(() {
+                        _isSearch = true;
+                      });
+                    },
+                    child: _isSearch == false
+                        ? Icon(Icons.search, color: Colors.white)
+                        : SizedBox.shrink(),
+                  ),
+                  SizedBox(
+                    width: 8,
+                  ),
+                  Icon(
+                    Icons.more_vert,
+                    color: Colors.white,
+                  ),
+                ],
+              )
+            : null,
         body: Column(children: <Widget>[
           _isSearch == false
               ? _currentPageIndex != 0
