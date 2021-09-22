@@ -211,13 +211,15 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
   }
 
   @override
-  Stream<List<TextMessageEntity>> getMessages(String channelId) {
+  Stream<List<TextMessageEntity>> getMessages(String channelId, int limit) {
     final messagesRef = fireStore
         .collection("myChatChannel")
         .doc(channelId)
-        .collection('messages');
+        .collection('messages')
+        .limit(limit)
+        .orderBy('time', descending: true);
 
-    return messagesRef.orderBy('time').snapshots().map(
+    return messagesRef.snapshots().map(
           (querySnap) => querySnap.docs
               .map((doc) => TextMessageModel.fromSnapShot(doc))
               .toList(),

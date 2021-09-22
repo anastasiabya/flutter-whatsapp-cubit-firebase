@@ -4,7 +4,6 @@ import 'package:bubble/bubble.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:pagination_view/pagination_view.dart';
 import 'package:whatsapp/presentation/bloc/communication/communication_cubit.dart';
 import 'package:whatsapp/presentation/widgets/theme/style.dart';
 
@@ -34,15 +33,32 @@ class SingleCommunicationPage extends StatefulWidget {
 class _SingleCommunicationPageState extends State<SingleCommunicationPage> {
   TextEditingController _textMessageController = TextEditingController();
   ScrollController _scrollController = ScrollController();
+  static const _limitIncrement = 10;
+  int _limit = 10;
+  double _lastScrollMessage = 0;
 
   @override
   void initState() {
     BlocProvider.of<CommunicationCubit>(context).getMessages(
-      senderId: widget.senderUID,
-      recipientId: widget.recipientUID,
-    );
+        senderId: widget.senderUID,
+        recipientId: widget.recipientUID,
+        limit: _limit);
     _textMessageController.addListener(() {
       setState(() {});
+    });
+    _scrollController.addListener(() {
+      if (_lastScrollMessage < _scrollController.position.maxScrollExtent) {
+        if (_scrollController.offset >=
+                _scrollController.position.maxScrollExtent &&
+            !_scrollController.position.outOfRange) {
+          BlocProvider.of<CommunicationCubit>(context).getMessages(
+              senderId: widget.senderUID,
+              recipientId: widget.recipientUID,
+              limit: _limit + _limitIncrement);
+          _lastScrollMessage = _scrollController.position.maxScrollExtent;
+          _limit += _limitIncrement;
+        }
+      }
     });
     super.initState();
   }
@@ -108,7 +124,6 @@ class _SingleCommunicationPageState extends State<SingleCommunicationPage> {
             if (communicationState is CommunicationLoaded) {
               return _bodyWidget(communicationState);
             }
-
             return Center(
               child: CircularProgressIndicator(
                 color: primaryColor,
@@ -139,12 +154,13 @@ class _SingleCommunicationPageState extends State<SingleCommunicationPage> {
   }
 
   _messagesListWidget(CommunicationLoaded messages) {
-    Timer(Duration(milliseconds: 100), () {
-      _scrollController.animateTo(_scrollController.position.maxScrollExtent,
-          duration: Duration(milliseconds: 300), curve: Curves.easeInQuad);
+    Timer(Duration(milliseconds: 1), () {
+      _scrollController.animateTo(_lastScrollMessage,
+          duration: Duration(milliseconds: 1), curve: Curves.easeInQuad);
     });
     return Expanded(
       child: ListView.builder(
+        reverse: true,
         controller: _scrollController,
         itemCount: messages.messages!.length,
         itemBuilder: (_, index) {

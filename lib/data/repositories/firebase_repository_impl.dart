@@ -48,8 +48,8 @@ class FirebaseRepositoryImpl implements FirebaseRepository {
   }
 
   @override
-  Stream<List<TextMessageEntity>> getMessages(String channelId) {
-    return remoteDataSource.getMessages(channelId);
+  Stream<List<TextMessageEntity>> getMessages(String channelId, int limit) {
+    return remoteDataSource.getMessages(channelId, limit);
   }
 
   @override

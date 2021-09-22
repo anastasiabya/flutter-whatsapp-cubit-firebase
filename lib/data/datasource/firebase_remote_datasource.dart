@@ -11,7 +11,7 @@ abstract class FirebaseRemoteDataSource{
   Future<void> getCreateCurrentUser(UserEntity user);
 
   Stream<Set<UserEntity>> getAllUsers();
-  Stream<List<TextMessageEntity>> getMessages(String channelId);
+  Stream<List<TextMessageEntity>> getMessages(String channelId, int limit);
   Stream<List<MyChatEntity>> getMyChat(String uid);
 
   Future<void> createOneToOneChatChannel(String uid,String otherUid);

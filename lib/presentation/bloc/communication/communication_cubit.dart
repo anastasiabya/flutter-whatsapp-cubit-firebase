@@ -73,13 +73,13 @@ class CommunicationCubit extends Cubit<CommunicationState> {
     }
   }
 
-  Future<void> getMessages({String? senderId, String? recipientId}) async {
+  Future<void> getMessages({String? senderId, String? recipientId, int? limit}) async {
     emit(CommunicationLoading());
     try {
       final channelId = await getOneToOneSingleUserChatChannelUseCase!
           .call(senderId!, recipientId!);
 
-      final messagesStreamData = getTextMessagesUseCase!.call(channelId);
+      final messagesStreamData = getTextMessagesUseCase!.call(channelId, limit!);
       messagesStreamData.listen((messages) {
         emit(CommunicationLoaded(messages: messages));
       });
